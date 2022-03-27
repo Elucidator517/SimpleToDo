@@ -2,6 +2,7 @@ package com.example.simpletodo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,83 +21,83 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val onLongClickListener = object  : TaskItemAdapter.OnLongClickListener{
-            override fun onItemLongClicked(position: Int) {
-                //1. remove the item from the list
+        val onLongClickListener = object : TaskItemAdapter.OnLongClickListener{
+            override fun onItemLongClicker(position: Int) {
+                // 1. remove the item from the list
                 listOfTasks.removeAt(position)
-                // 2. notify that adapter
+                // 2. Notify the adapter that our data set has changed
                 adapter.notifyDataSetChanged()
 
                 saveItems()
-
             }
 
         }
 
-        // 1. detect when the user slicks on the add button
-//        findViewById<Button>(R.id.button).setOnClickListener {
-            //executed when button clicked
+        // 1. detect when user clicks button
+//
+//
+//        }
 
- //       }
         loadItems()
 
-        // look up recyclerView
+        // look up recyclerView in layout
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        // Create adapter passing in the sample user data
+        // Create adapter
         adapter = TaskItemAdapter(listOfTasks, onLongClickListener)
-        // Attach the adapter to the recyclerview to populate items
+        // Attach the adapter
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Set up button and input field
+
         val inputTextField = findViewById<EditText>(R.id.addTaskField)
 
-
+        // Get a reference to button
+        // set an onclickListener
         findViewById<Button>(R.id.button).setOnClickListener{
-            // 1. Grab teh text the user has inputted into addTaskField
+            // 1. Grab text the user has inputted
             val userInputtedTask = inputTextField.text.toString()
 
-            // 2. add string to our list of tasks
+            // 2. Add string to our list of tasks
             listOfTasks.add(userInputtedTask)
 
-            // notify the adapter
-            adapter.notifyItemInserted(listOfTasks.size - 1)
+            // Notify the adapter
+            adapter.notifyItemInserted(listOfTasks.size-1)
 
-            //3. Reset text field
+            // 3. Reset text field
             inputTextField.setText("")
 
             saveItems()
-
         }
-
-
     }
-    // save the data
-    // by writing and reading the file
 
-    // create a method to get file
-    fun getDataFile() : File {
+    // Save the data that the user has entered
+    // Save data by writing and reading from a file
+
+    // Get the file
+    fun getDataFile() : File{
+
+        // Every line is going to represent a specific task in our list of tasks
         return File(filesDir, "data.txt")
     }
 
-    // load the items by reading
-    fun loadItems() {
-        try {
-            listOfTasks - FileUtils.readLines(getDataFile(), Charset.defaultCharset())
-        } catch (ioException : IOException){
+    // Load the items
+    fun loadItems(){
+        try{
+            listOfTasks = FileUtils.readLines(getDataFile(), Charset.defaultCharset())
+        } catch (ioException: IOException){
             ioException.printStackTrace()
-
         }
 
     }
 
-
-    // save items by writing
-    fun saveItems() {
-        try{
+    // Save items
+    fun saveItems(){
+        try {
             FileUtils.writeLines(getDataFile(), listOfTasks)
         } catch (ioException: IOException){
             ioException.printStackTrace()
         }
+
     }
 }
